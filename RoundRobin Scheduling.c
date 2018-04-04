@@ -6,13 +6,13 @@
 #include<pthread.h>
 #include<semaphore.h>
 struct Process {							//DETAILS OF PROCESS IS STORED IN A STRUCTURE
-	int Rtime,Atime,Btime,Qtime,id;				//ARRIVALTIME,REMAINING TIME,BURST TIME,ID OF PROCESS
+	int Rtime,Atime,Btime,Qtime,id;			//ARRIVALTIME,REMAINING TIME,BURST TIME,ID OF PROCESS
 	clock_t arrival;						//IT STORES THE VALUE OF CPU CLOCK CYCLES WHEN IT ENTERED INTO THE PROCESS
 	int flag,completed,Arrival_Flag;		//FEW FLAGS TO RUN THE PROGRAM PROPERLY
 	sem_t se;								//SEMOPHORE OF THAT PROCESS
 	struct Process *next;					//LINKLIST NEXT NODE ADDRESS
 }; 
-int i=0,z=1,l=1,TQ;								
+int i=0,z=1,l=1,TQ;							//TIME QUANTUM	
 float WT=0,TAT=0;							//AVERAGE WAITING TIME AND TURN AROUND TIME
 clock_t Start_Time,count;					//IT STORES THE CPU CLOCK CYCLES WHEN IT START EXECUTING THE PROCESSES AND THE VALUES AFTER EACH SECOND 
 struct Process *front=NULL,*temp,*Front_P=NULL,*Rear_P=NULL;		//HEADERS AND TAILERS OF QUEUES
@@ -27,13 +27,13 @@ void *processor(node *S) {					//PTHREAD FUNCTION OF OUR PROCESS
 			count=clock();
 		} 
 		if(S->flag==1) {
-			printf("\nProcess-%d Running \t\t\t\t\tTimer :%d",S->id,(clock()-Start_Time)/CLOCKS_PER_SEC);
+			printf("\nProcess-%d Started \t\t\t\t\tTimer :%d",S->id,(clock()-Start_Time)/CLOCKS_PER_SEC);
 			S->flag=0;
 			S->arrival=clock();
 		}
 		if((clock()-count)/CLOCKS_PER_SEC==1) {	//CHECKS THE VALUE PER SECOND
 			count=clock();
-			printf("\n\t\t\t\t\t\t\tTimer :%d",(clock()-Start_Time)/CLOCKS_PER_SEC);
+			printf("\nProcess-%d Running\t\t\t\t\tTimer :%d",S->id,(clock()-Start_Time)/CLOCKS_PER_SEC);
 			S->Rtime-=1;
 			S->Qtime+=1;
 			if(S->Rtime==0) {					//PROCESS TERMINATION CONDITION
@@ -55,7 +55,7 @@ void *processor(node *S) {					//PTHREAD FUNCTION OF OUR PROCESS
 					printf("next Process is: %d",Front_P->id);
 				}
 			}
-			else if(S->Qtime==TQ && Front_P!=Rear_P) {				//CONTEXT SWITCHING CONDITION
+			else if(S->Qtime>=TQ && Front_P!=Rear_P) {				//CONTEXT SWITCHING CONDITION
 				S->Qtime=0;
 				Front_P=Front_P->next;
 				Rpush(S);
@@ -115,7 +115,7 @@ void main() {
 	pthread_t p[10];
 	printf("Enter No.of Processes :");				
 	scanf("%d",&n);
-	printf("Enter Time Quantum :");
+	printf("Enter Time Quantum :");		//TO SHOW THE PROCESSES ARE RUNNING WE CONVERTED 1 MILLI SECOND = ONE SECOND
 	scanf("%d",&TQ);
 	while(i<n) {
 		if(front==NULL) {
@@ -161,7 +161,7 @@ void main() {
 		}
 		if(((clock()-count)/CLOCKS_PER_SEC==1 && Front_P==NULL)) { //TIMER PRINTS 
 			count=clock();
-			printf("\n\t\t\t\t\t\t\tTimer :%d",(clock()-Start_Time)/CLOCKS_PER_SEC);
+			printf("\nNo Process is Running\t\t\t\tTimer :%d",(clock()-Start_Time)/CLOCKS_PER_SEC);
 		}
 	}
 	for(i=0;i<n;i++) {
