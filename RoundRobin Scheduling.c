@@ -161,7 +161,7 @@ void main() {
 		}
 		if(((clock()-count)/CLOCKS_PER_SEC==1 && Front_P==NULL)) { //TIMER PRINTS 
 			count=clock();
-			printf("\nNo Process is Running\t\t\t\tTimer :%d",(clock()-Start_Time)/CLOCKS_PER_SEC);
+			printf("\nNo Process is Running\t\t\t\t\tTimer :%d",(clock()-Start_Time)/CLOCKS_PER_SEC);
 		}
 	}
 	for(i=0;i<n;i++) {
