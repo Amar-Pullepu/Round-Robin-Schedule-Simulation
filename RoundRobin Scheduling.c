@@ -143,7 +143,7 @@ void main() {
 	printf("\n\t\t\t\t\t\t\tTimer :0");
 	while(front!=NULL) {
 		temp=front;
-		if(temp->Atime<=0) {			//IF ARRIVAL TIME IS LESS THAN ZERO PROCESS WON'T EXECUTE
+		if(temp->Atime<0) {			//IF ARRIVAL TIME IS LESS THAN ZERO PROCESS WON'T EXECUTE
 			printf("\nInvalid Arrival Time for Process-%d",temp->id);
 			i++;
 			front=front->next;
